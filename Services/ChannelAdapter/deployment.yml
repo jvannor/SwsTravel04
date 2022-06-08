@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swstravel04-channeladapter
+spec:
+  selector:
+    matchLabels:
+      app: swstravel04-channeladapter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: swstravel04-channeladapter
+    spec:
+      containers:
+      - name: swstravel04-channeladapter
+        image: acr9fad.azurecr.io/swstravel04-channeladapter:latest
+        imagePullPolicy: Always
+        env:
+        - name: ChannelAdapter__Interval
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-channeladapter-secret
+              key: interval
+        - name: AzureServiceBus__FullyQualifiedNamespace
+          valueFrom: 
+            secretKeyRef:
+              name: swstravel04-channeladapter-secret
+              key: bus
+        - name: AZURE_TENANT_ID
+          valueFrom: 
+            secretKeyRef:
+              name: swstravel04-channeladapter-secret
+              key: tenant
+        - name: AZURE_CLIENT_ID
+          valueFrom: 
+            secretKeyRef:
+              name: swstravel04-channeladapter-secret
+              key: client
+        - name: AZURE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-channeladapter-secret
+              key: secret
+        - name: SQLCONNSTR_EventDb
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-channeladapter-secret
+              key: database
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

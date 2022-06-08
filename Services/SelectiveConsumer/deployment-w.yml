@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swstravel04-selectiveconsumer-w
+spec:
+  selector:
+    matchLabels:
+      app: swstravel04-selectiveconsumer-w
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: swstravel04-selectiveconsumer-w
+    spec:
+      containers:
+      - name: swstravel04-selectiveconsumer-w
+        image: acr9fad.azurecr.io/swstravel04-selectiveconsumer:latest
+        imagePullPolicy: Always
+        env:
+        - name: AzureServiceBus__FullyQualifiedNamespace
+          value: "BUS-3136.servicebus.windows.net"
+        - name: AZURE_TENANT_ID
+          value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+        - name: AZURE_CLIENT_ID
+          value: "9c1b9785-c4c5-4f09-9116-415dc7f6adfa"
+        - name: AZURE_CLIENT_SECRET
+          value: "ceT8Q~nTxwhIMX4kTacuZcilJZPfFyUSZ9gPxdoU"
+        - name: SelectiveConsumer__Topic
+          value: "pubsubchannel"
+        - name: SelectiveConsumer__Subscription
+          value: "SelectiveConsumerW"
+        - name: SelectiveConsumer__Label
+          value: "SelectiveConsumerW"
+        - name: SelectiveConsumer__MicroserviceUri
+          value: "http://swstravel04-service-y/journal"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swstravel04-microservice-z
+spec:
+  selector:
+    matchLabels:
+      app: swstravel04-microservice-z
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: swstravel04-microservice-z
+    spec:
+      containers:
+      - name: swstravel04-microservice-z
+        image: acr9fad.azurecr.io/swstravel04-microservice:latest
+        imagePullPolicy: Always
+        env:
+        - name: AZURE_TENANT_ID
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-microservice-secret
+              key: tenant
+        - name: AZURE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-microservice-secret
+              key: client
+        - name: AZURE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-microservice-secret
+              key: secret       
+        - name: SQLCONNSTR_JournalDb
+          valueFrom:
+            secretKeyRef:
+              name: swstravel04-microservice-secret
+              key: database
+        - name: Microservice__Label
+          value: "Microservice-Z"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

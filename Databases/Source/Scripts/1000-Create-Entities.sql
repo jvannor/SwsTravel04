@@ -1,0 +1,21 @@
+CREATE TABLE dbo.Event (
+    EventId INT IDENTITY(1, 1) PRIMARY KEY,
+    EventCode NVARCHAR(64) NOT NULL,
+    Scheduled DATETIME NOT NULL DEFAULT GETUTCDATE(),
+    Created DATETIME NOT NULL DEFAULT GETUTCDATE(),
+    Modified DATETIME NOT NULL DEFAULT GETUTCDATE(),
+    Completed DATETIME NULL
+);
+GO
+
+CREATE TRIGGER dbo.Event_Modified
+   ON dbo.Event
+   AFTER UPDATE
+AS
+BEGIN
+   SET NOCOUNT ON;
+   UPDATE dbo.Event
+   SET Modified = GETUTCDATE() FROM dbo.Event e JOIN Inserted i ON 
+   e.EventId = i.EventId
+END;
+GO
